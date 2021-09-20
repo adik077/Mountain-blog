@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+{% block title %}Profile settings{% endblock %}
+{% load bootstrap %}
+
+
+{% block body %}
+<div class="card" style="width: 70rem;">
+    <div class="card-body">
+        <h5>Ustawienia profilu...</h5></br>
+       <form method="POST">
+           {% csrf_token %}
+           {{form.as_p}}</br>
+           <button type="submit" class="btn btn-primary">Aktualizuj profil</button>
+       </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+{% block title %}Update user profile{% endblock %}
+{% load bootstrap %}
+
+
+{% block body %}
+<div class="card" style="width: 70rem;">
+    <div class="card-body">
+        {% if user.is_authenticated %}
+            {% if user.id == profile.user.id %}
+                <h5>Aktualizacja profilu...</h5></br>
+               <form method="POST" enctype="multipart/form-data">
+                   {% csrf_token %}
+                   {{form.as_p}}</br>
+                   <button type="submit" class="btn btn-primary">Aktualizuj profil</button>
+               </form>
+            {% else %}
+                    <strong>Zaloguj sie jako prawidlowy uzytkownik aby edytowac dane...</strong>
+            {% endif %}
+
+        {% else %}
+            <strong>Zaloguj sie jako prawidlowy uzytkownik aby edytowac dane...</strong>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

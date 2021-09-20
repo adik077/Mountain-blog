@@ -1,0 +1,45 @@
+{% extends 'main.html' %}
+{% block title %}Searched posts{% endblock %}
+
+
+{% block body %}
+{% if searched %}
+    <div class="card-body">
+        <h5>Znalezione artykuly:</h5>
+    </div>
+    {% for post in searched %}
+            {% if post.is_active %}
+                <div class="card" style="width: 70rem;">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'post_detail' post.id %}" style="text-decoration:none;" >{{post.title}}</a></h5>
+                        <p class="card-text">{{post.creation_date}} | {{post.author}} | Kategoria: <a href="{% url 'category_detail_list' post.category|slugify%}" style="text-decoration:none;">{{post.category}}</a>
+                            {% if user.is_authenticated %}
+                                </br>
+                                {% if user.id == post.author.id %}
+                                    <a href="{% url 'delete_post' post.id %}">[Usun]</a><a href="{% url 'edit_post' post.id %}">[Edytuj]</a>
+                                {% endif %}
+                            {% endif %}
+                        </p>
+                        <p>
+                            {{post.snippet}}......
+                        </p>
+                    </div>
+                </div>
+
+            {% endif %}
+            </br>
+    {% endfor %}
+
+{% else %}
+   <div class="card" style="width: 70rem;">
+       <div class="card-body">
+           <strong>Niestety nie znalezlismy wyszukiwanej frazy...</strong>
+       </div>
+   </div>
+{% endif %}
+
+{% endblock %}
+
+
+
+

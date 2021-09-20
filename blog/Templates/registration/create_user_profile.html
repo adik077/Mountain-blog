@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+{% block title %}Create user profile{% endblock %}
+{% load bootstrap %}
+
+
+{% block body %}
+<div class="card" style="width: 70rem;">
+    <div class="card-body">
+        <h5>Stworz swoj profil...</h5></br>
+       <form method="POST" enctype="multipart/form-data">
+           {% csrf_token %}
+           {{form.as_p}}</br>
+           <button type="submit" class="btn btn-primary">Aktualizuj profil</button>
+       </form>
+    </div>
+</div>
+
+{% endblock %}

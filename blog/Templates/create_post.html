@@ -1,0 +1,37 @@
+{% extends 'main.html' %}
+{% block title %}Add post{% endblock %}
+{% load bootstrap %}
+
+
+{% block body %}
+
+
+{% if user.is_authenticated %}
+    <div class="card" style="width: 70rem;">
+        <div class="card-body">
+           <form method="POST" enctype="multipart/form-data">
+               <h5>Stwórz artykuł...</h5>
+               {% csrf_token %}
+               {{form.media}}
+               {{form.as_p}}</br>
+               <button type="submit" class="btn btn-primary">Stwórz post</button>
+           </form>
+        </div>
+    </div>
+{% else %}
+    <div class="card" style="width: 70rem;">
+        <div class="card-body">
+            Zaloguj sią aby stworzyć artykuł...
+        </div>
+    </div>
+{% endif %}
+
+
+ <script>
+    var author_field={{user.id}}
+    document.getElementById("aut").value=author_field
+ </script>
+
+
+
+{% endblock %}

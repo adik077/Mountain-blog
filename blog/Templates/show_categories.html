@@ -1,0 +1,19 @@
+{% extends 'main.html' %}
+{% block title %}Categories{% endblock %}
+
+
+{% block body %}
+
+
+            <div class="card" style="width: 70rem;">
+                <div class="card-body" style="display:inline; overflow: hidden; white-space: nowrap;">
+                    {% for category in all_categories %}
+                    <a href="{% url 'category_detail_list' category|slugify %}" style="text-decoration:none;" ><button class="btn btn-outline-success me-2" type="button">{{category|title}} </button></a>
+                    {% endfor %}
+                </div>
+            </div>
+{% endblock %}
+
+
+
+

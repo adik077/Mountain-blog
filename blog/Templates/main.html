@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+{% load static %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+<body style="background-image:url({% static 'background.png' %});background-repeat: no-repeat;">
+<script src="https://kit.fontawesome.com/f29e29d3e8.js" crossorigin="anonymous"></script>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'main' %}">Góry Inaczej</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          {% if user.is_authenticated %}
+
+          {% else %}
+            <a class="nav-link active" style="color:#33CC33" aria-current="page" href="{% url 'login' %}">Login</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          {% if not user.is_authenticated %}
+          <a class="nav-link active" style="color:#BDBDBD" aria-current="page" href="{% url 'register' %}">Rejestracja</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          {% if user.is_authenticated %}
+          <a class="nav-link active" style="color:#BDBDBD" aria-current="page" href="{% url 'create' %}">Dodaj artykuł</a>
+          {% endif %}
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" style="color:#BDBDBD" aria-current="page" href="{% url 'show_categories' %}">Kategorie</a>
+        </li>
+
+
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+          <div class="sms-button"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" style="color:#BDBDBD" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+             {{user.username|title}}
+            </a>
+          </div>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'update_profile' %}">Ustawienia konta</a></li>
+            {% if user.profile %}
+              <li><a class="dropdown-item" href="{% url 'update_user_profile' user.profile.id %}">Mój profil</a></li>
+            {% else %}
+              <li><a class="dropdown-item" href="{% url 'create_user_profile' %}">Stwórz profil</a></li>
+            {% endif %}
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" style="color:red;" href="{% url 'logout' %}">Logout </a></li>
+          </ul>
+        </li>
+        {% endif %}
+
+      </ul>
+
+      <form class="d-flex" method="POST" action="{% url 'search' %}">
+        {% csrf_token %}
+        <input class="form-control me-2" type="search" name="search" placeholder="Czego szukasz?" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Szukaj</button>
+      </form>
+
+    </div>
+  </div>
+</nav>
+</br>
+
+<div style="margin-left:10px">
+    {% block body %}{% endblock %}
+</div>
+
+</body>
+<!--
+  Website designed and built by Adrian Ginalski - all rights reserved
+  No rights to copy content or use this project without author agreement
+!-->
+</html>
+
+
+
+
+

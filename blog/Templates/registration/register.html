@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+{% block title %}Register{% endblock %}
+{% load bootstrap %}
+
+
+{% block body %}
+<div class="card" style="width: 70rem;">
+    <div class="card-body">
+        <h5>Rejestracja...</h5></br>
+       <form method="POST">
+           {% csrf_token %}
+           {{form|bootstrap}}</br>
+           <button type="submit" class="btn btn-primary">Utworz profil</button>
+       </form>
+    </div>
+</div>
+
+{% endblock %}

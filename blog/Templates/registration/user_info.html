@@ -1,0 +1,50 @@
+{% extends 'main.html' %}
+{% block title %}User info{% endblock %}
+{% load static %}
+
+
+{% block body %}
+<div class="card" style="width: 70rem;" xmlns="http://www.w3.org/1999/html">
+    <div class="card-body">
+        <h5>O mnie: </h5>
+        <div class="card text-white bg-dark mb-3" style="max-width: 68rem;">
+            <div class="card-header">
+                <strong>{{user_info.user.username|title}}</strong></br>
+            </div>
+            <div class="card-body">
+                 <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            {% if user_info.profile_pic %}
+                                <img src="{{user_info.profile_pic.url}}" height="200" width="200" class="rounded" style="display:block;margin:auto" >
+                            {% else %}
+                                <img src="{% static 'unknown_user.jpg' %}" height="200" width="200" class="rounded" style="display:block;margin:auto" >
+                            {% endif %}
+                        </div>
+                        <div class="col-9">
+                            <h5 class="card-title">O autorze</h5>
+                            {% if user_info.bio %}
+                                <p class="card-text" style="text-align:justify;">{{user_info.bio|linebreaksbr}}</p>
+                            {% else %}
+                                 <p class="card-text">Autor nie dodal jeszcze informacji o sobie</p>
+                            {% endif %}
+                            {% if user_info.facebook_url %}
+                                <a href="{{user_info.facebook_url}}"><i class="fab fa-facebook-square fa-2x"></i></a>
+                            {% endif %}
+                            {% if user_info.twitter_url %}
+                                <a href="{{user_info.twitter_url}}"><i class="fab fa-twitter-square fa-2x"></i></a>
+                            {% endif %}
+                            {% if user_info.instagram_url %}
+                                <a href="{{user_info.instagram_url}}"><i class="fab fa-instagram-square fa-2x"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+

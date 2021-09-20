@@ -1,0 +1,137 @@
+{% extends 'main.html' %}
+{% block title %}{{object.title}}{% endblock %}
+{% load static %}
+
+{% block body %}
+<script>
+$(function(){
+    // Enables popover
+    $("[data-toggle=popover]").popover({html:true});
+});
+</script>
+
+<div class="card" style="width: 70rem;" xmlns="http://www.w3.org/1999/html">
+    <div class="card-body">
+
+        <h5 class="card-title">{{object.title|title}}</h5>
+        <p class="card-text">{{post.creation_date}} | {{post.author|title}}</p>
+            {% if user.is_authenticated %}
+                {% if user.id == post.author.id %}
+                    <a href="{% url 'delete_post' post.id %}"  style="text-decoration:none;">[Usuń]</a><a href="{% url 'edit_post' post.id %}" style="text-decoration:none;">[Edytuj]</a></p>
+                {% endif %}
+
+                {% if user.username in like_authors %}
+                    <form method="POST" action="{% url 'dislike_post' post.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" name="post_id" value="{{post.id}}" class="btn btn-danger  btn-sm">Nie Lubię  <i class="far fa-thumbs-down"></i></button>
+                    </form>
+                    Polubiłeś ten artykuł</br>
+                {% else %}
+                    <form method="POST" action="{% url 'like_post' post.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" name="post_id" value="{{post.id}}" class="btn btn-primary  btn-sm">Lubię  <i class="far fa-thumbs-up"></i></button>
+                    </form>
+                    Polub ten artykuł</br>
+                {% endif %}
+            {% endif %}
+        <strong>Polubienia: {{total_likes}} </strong></br></br><hr>
+        <div class="container">
+            <p class="card-text" style="text-align:justify;">{{object.body|safe|linebreaksbr}}</p>
+        </div>
+        </br></br>
+
+
+        <div class="card text-white bg-dark mb-3" style="max-width: 45rem;">
+            <div class="card-header">
+                <strong>{{post.author.username|title}}</strong>
+            </div>
+            <div class="card-body">
+                 <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            {% if post.author.profile.profile_pic %}
+                                <img src="{{post.author.profile.profile_pic.url}}" height="115" width="115" class="rounded" style="display:block;margin:auto" >
+                            {% else %}
+                                <img src="{% static 'unknown_user.jpg' %}" height="115" width="115" class="rounded" style="display:block;margin:auto" >
+                            {% endif %}
+                        </div>
+                        <div class="col-9">
+                            <h5 class="card-title">O autorze</h5>
+                            {% if post.author.profile.bio %}
+                                <p class="card-text" style="text-align:justify;">
+                                    {{post.author.profile.bio|linebreaksbr|slice:200}}...
+                                    {% if post.author.profile.id %}
+                                        <a href="{% url 'author_info' post.author.profile.id %}" style="color:#3366FF; text-decoration:none;">[czytaj dalej]</a>
+                                    {% endif %}
+                                </p>
+                            {% else %}
+                                 <p class="card-text">Autor nie dodał jeszcze informacji o sobie</p>
+                            {% endif %}
+                            {% if post.author.profile.facebook_url %}
+                                <a href="{{post.author.profile.facebook_url}}"><i class="fab fa-facebook-square fa-2x"></i></a>
+                            {% endif %}
+                            {% if post.author.profile.twitter_url %}
+                                <a href="{{post.author.profile.twitter_url}}"><i class="fab fa-twitter-square fa-2x"></i></a>
+                            {% endif %}
+                            {% if post.author.profile.instagram_url %}
+                                <a href="{{post.author.profile.instagram_url}}"><i class="fab fa-instagram-square fa-2x"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </br><hr>
+        <h4>Komentarze...</h4>
+        </br>
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'add_comment' post.pk %}">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="add_comment" placeholder="Dodaj komentarz..." aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Skomentuj</button>
+                </div>
+            </form>
+
+            {% if post.comments.all %}
+                </br>
+                {% for comment in post.comments.all %}
+
+                    <div class="card text-dark bg-light mb-3" style="max-width: 68rem;">
+                        <div class="card-header">
+                            {% if comment.comment_author.profile.profile_pic %}
+                                <img src="{{ comment.comment_author.profile.profile_pic.url }}" height="40" width="40" class="rounded">
+                            {% else %}
+                                <img src="{% static 'unknown_user.jpg' %}" height="40" width="40" class="rounded">
+                            {% endif %}
+                            <strong>&nbsp{{comment.comment_author|title}} | {{comment.date}}</strong>
+                            {% if user.id == comment.comment_author.id %}&nbsp
+                                 <a tabindex="0" style="color:#0066FF;"  data-html="true" data-toggle="popover"
+                                    title="<b>Czy na pewno chcesz usunąć komentarz?</b>"
+                                    data-content="<div><b><a href='{% url 'delete_comment' comment.pk post.id %}'>Usuń</a></b></div>">
+                                     <i class="fas fa-trash-alt"></i>
+                                 </a>
+                            {% endif %}
+                        </div>
+                        <div class="card-body text-dark">
+                            <p class="card-text">{{comment.body}}</p>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            {% else %}
+            <strong>Nie dodano jeszcze komentarzy, bądź pierwszy...</strong>
+            {% endif %}
+        {% else %}
+            <strong>Zaloguj sie aby zobaczyc komentarze...</strong>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+{% block title %}Login{% endblock %}
+{% load bootstrap %}
+
+
+{% block body %}
+<div class="card" style="width: 70rem;">
+    <div class="card-body">
+        <h5>Logowanie...</h5></br>
+       <form method="POST">
+           {% csrf_token %}
+           <div class="mb-3">
+                <input type="text" class="form-control" placeholder="Login" name="username">
+           </div>
+           <div class="mb-3">
+                 <input type="password" class="form-control" placeholder="Hasło" name="password">
+           </div>
+                 <button type="submit" class="btn btn-primary">Zaloguj</button>
+       </form>
+
+        </br>Nie masz jeszcze konta? <a href="{% url 'register' %}" style="text-decoration:none;font-style:italic">Stwórz je...</a>
+    </div>
+</div>
+
+{% endblock %}
+
+

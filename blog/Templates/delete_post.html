@@ -1,0 +1,29 @@
+{% extends 'main.html' %}
+{% block title %}Delete post{% endblock %}
+
+
+{% block body %}
+{% if user.is_authenticated %}
+    {% if user.id == post.author.id %}
+        <div class="card-body">
+            <h6>Czy napewno chcesz usunąć artykuł {{post.title|title}}?</h6>
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Usuń</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="card" style="width: 70rem;">
+        <div class="card-body">
+            <strong>Zaloguj sią jako prawidłowy użytkownik aby usunąć artykuł...</strong>
+        </div>
+    </div>
+    {% endif %}
+{% else %}
+    <div class="card" style="width: 70rem;">
+        <div class="card-body">
+            Zaloguj sie aby usunąć artykuł...
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends 'main.html' %}
+{% block title %}Posts{% endblock %}
+
+
+
+{% block body %}
+
+<div class="card-body">
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Witaj {{user.username|title}}!</h1>
+    <p class="lead">Odkrywaj góry, czytaj artykuły i dodawaj swoje historie...</p>
+  </div>
+</div>
+</div></br>
+
+
+{% if highlited_post %}
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-bs-touch="true" data-bs-keyboard="true" style="width:60%; text-align:center;margin: 0 auto;"  >
+        <div class="carousel-indicators">
+             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+             <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <div class="carousel-inner">
+          {% for post in highlited_post %}
+            {% if forloop.first %}
+                {% if post.post_picture_admin %}
+                    {% if post.is_highlited %}
+                        <div class="carousel-item active" data-bs-interval="100">
+                            <a href="{% url 'post_detail' post.id %}"><img src="{{post.post_picture_admin.url}}" class="d-block w-100" style="max-height:100vh;"></a>
+                            <div class="carousel-caption d-none d-md-block">
+                                 <h5>{{post.title|title}}</h5>
+                                <p>{{post.snippet|slice:70}}...</p>
+                             </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                {% if post.post_picture_admin %}
+                     {% if post.is_highlited %}
+                        <div class="carousel-item" data-bs-interval="100">
+                            <a href="{% url 'post_detail' post.id %}"><img src="{{post.post_picture_admin.url}}" class="d-block w-100"></a>
+                            <div class="carousel-caption d-none d-md-block">
+                                 <h5>{{post.title|title}}</h5>
+                                <p>{{post.snippet|slice:70}}...</p>
+                             </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+          {% endfor %}
+      </div>
+
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+{% endif %}
+    </br></br>
+
+
+    {% for post in object_list %}
+        {% if post.is_active %}
+            <div class="card" style="width: 70rem;">
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-9">
+                                <h5 class="card-title"><a href="{% url 'post_detail' post.id %}" style="text-decoration:none;" >{{post.title|title}}</a></h5>
+                                <p class="card-text">{{post.creation_date}} | {{post.author}} | Kategoria: <a href="{% url 'category_detail_list' post.category|slugify%}" style="text-decoration:none;"> {{post.category}} </a>
+                                    {% if user.is_authenticated %}
+                                        </br>
+                                        {% if user.id == post.author.id %}
+                                            <a href="{% url 'delete_post' post.id %}">[Usuń]</a><a href="{% url 'edit_post' post.id %}">[Edytuj]</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </p>
+                                <p>
+                                    {{post.snippet}}...
+                                </p>
+                            </div>
+                            <div class="col">
+                                {% if post.post_picture %}
+                                     <img src="{{ post.post_picture.url }}" width="175" class="rounded mx-auto d-block" style="float:right;vertical-align:middle;">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endif %}
+        </br>
+    {% endfor %}
+
+{% if page_obj.has_previous or page_obj.has_next %}
+    <div class="pagination justify-content-center">
+        <span class="step-links">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                  {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                  {% endif %}
+                  {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+                    {% if not page_obj.has_next %}
+                        <li class="page-item active">
+                             <a class="page-link" href="#">{{page_obj.number}} <span class="sr-only">(current)</span></a>
+                        </li>
+                    {% endif %}
+                  {% endif %}
+
+                  {% if page_obj.has_next %}
+                    <li class="page-item active">
+                         <a class="page-link" href="#">{{page_obj.number}} <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                  {% endif %}
+                  {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                  {% endif %}
+              </ul>
+                {% if page_obj.has_previous and page_obj.has_next %}
+                    <ul>
+                        <p style="font-style:italic">
+                        &nbsp&nbsp&nbspStrona {{ page_obj.number }} z <a href="?page={{ page_obj.paginator.num_pages }}" style="text-decoration:none">{{ page_obj.paginator.num_pages }}</a>
+                        </p>
+                    </ul>
+                {% else %}
+                <p style="font-style:italic">
+                    &nbsp&nbsp&nbspStrona {{ page_obj.number }} z <a href="?page={{ page_obj.paginator.num_pages }}" style="text-decoration:none">{{ page_obj.paginator.num_pages }}</a>
+                </p>
+                {% endif %}
+            </nav>
+        </span>
+    </div>
+{% endif %}
+{% endblock %}
