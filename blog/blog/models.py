@@ -35,8 +35,8 @@ class Post(models.Model):
     category=models.CharField(max_length=60, default='gory')
     post_picture=models.ImageField(blank=True,null=True, upload_to="images/")
     post_picture_admin=models.ImageField(blank=True,null=True, upload_to="images/admin")
-    is_active=models.NullBooleanField(default=True)
-    is_highlited=models.NullBooleanField(default=False)
+    is_active=models.BooleanField(null=True)
+    is_highlited=models.BooleanField(null=True)
     like=models.ManyToManyField(User,related_name='blog_posts')
     author=models.ForeignKey(User, on_delete=models.CASCADE)
 
